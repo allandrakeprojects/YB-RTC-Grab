@@ -42,6 +42,7 @@
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.label_player_last_registered = new System.Windows.Forms.Label();
             this.panel_cefsharp = new System.Windows.Forms.Panel();
+            this.timer_close_message_box = new System.Windows.Forms.Timer(this.components);
             this.panel_header.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_minimize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_close)).BeginInit();
@@ -148,7 +149,8 @@
             // 
             // label_status
             // 
-            this.label_status.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.label_status.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.label_status.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_status.Location = new System.Drawing.Point(0, 65);
             this.label_status.Name = "label_status";
@@ -184,6 +186,11 @@
             this.panel_cefsharp.Name = "panel_cefsharp";
             this.panel_cefsharp.Size = new System.Drawing.Size(445, 402);
             this.panel_cefsharp.TabIndex = 9;
+            // 
+            // timer_close_message_box
+            // 
+            this.timer_close_message_box.Enabled = true;
+            this.timer_close_message_box.Tick += new System.EventHandler(this.timer_close_message_box_Tick);
             // 
             // Main_Form
             // 
@@ -231,5 +238,6 @@
         private System.Windows.Forms.Timer timer;
         private System.Windows.Forms.Label label_player_last_registered;
         private System.Windows.Forms.Panel panel_cefsharp;
+        private System.Windows.Forms.Timer timer_close_message_box;
     }
 }

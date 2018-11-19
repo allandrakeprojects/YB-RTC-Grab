@@ -263,7 +263,6 @@ namespace YB_RTC_Grab
             chromeBrowser = new ChromiumWebBrowser("http://103.4.104.8/page/manager/login.jsp");
             panel_cefsharp.Controls.Add(chromeBrowser);
             chromeBrowser.AddressChanged += ChromiumBrowserAddressChanged;
-            chromeBrowser.JsDialogHandler = new JsDialogHandler();
         }
 
         // CefSharp Address Changed
@@ -376,14 +375,32 @@ namespace YB_RTC_Grab
                 }
             }
         }
+        
+        [DllImport("user32.dll", EntryPoint = "FindWindow", SetLastError = true, CharSet = CharSet.Unicode)]
+        static extern IntPtr FindWindowByCaption(IntPtr ZeroOnly, string lpWindowName);
 
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
 
+        const UInt32 WM_CLOSE = 0x0010;
 
+        void ___CloseMessageBox()
+        {
+            IntPtr windowPtr = FindWindowByCaption(IntPtr.Zero, "JavaScript Alert - http://103.4.104.8");
 
+            if (windowPtr == IntPtr.Zero)
+            {
+                return;
+            }
 
+            SendMessage(windowPtr, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+        }
 
-
-
+        private void timer_close_message_box_Tick(object sender, EventArgs e)
+        {
+            ___CloseMessageBox();
+        }
+        
         // ----- Functions
         private async void ___GetPlayerListsRequestAsync(string index)
         {
