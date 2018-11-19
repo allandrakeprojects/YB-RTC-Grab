@@ -23,11 +23,12 @@
         #region Windows Form Designer generated code
 
         /// <summary>
-        /// Required method for Designer support - do not modify
+        /// Required method for Designer support - do not modiYB
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main_Form));
             this.panel_header = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -37,6 +38,9 @@
             this.label_brand = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.pictureBox_loader = new System.Windows.Forms.PictureBox();
+            this.label_status = new System.Windows.Forms.Label();
+            this.timer = new System.Windows.Forms.Timer(this.components);
+            this.label_player_last_registered = new System.Windows.Forms.Label();
             this.panel_cefsharp = new System.Windows.Forms.Panel();
             this.panel_header.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_minimize)).BeginInit();
@@ -54,7 +58,7 @@
             this.panel_header.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel_header.Location = new System.Drawing.Point(0, 0);
             this.panel_header.Name = "panel_header";
-            this.panel_header.Size = new System.Drawing.Size(569, 45);
+            this.panel_header.Size = new System.Drawing.Size(466, 45);
             this.panel_header.TabIndex = 1;
             this.panel_header.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel_header_MouseDown);
             // 
@@ -66,7 +70,7 @@
             this.panel1.Size = new System.Drawing.Size(158, 10);
             this.panel1.TabIndex = 1;
             this.panel1.TabStop = true;
-            this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel_MouseDown);
+            this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
             // 
             // label_title
             // 
@@ -85,7 +89,7 @@
             this.pictureBox_minimize.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.pictureBox_minimize.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pictureBox_minimize.Image = global::YB_RTC_Grab.Properties.Resources.minus;
-            this.pictureBox_minimize.Location = new System.Drawing.Point(481, 10);
+            this.pictureBox_minimize.Location = new System.Drawing.Point(378, 10);
             this.pictureBox_minimize.Name = "pictureBox_minimize";
             this.pictureBox_minimize.Size = new System.Drawing.Size(24, 24);
             this.pictureBox_minimize.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -98,7 +102,7 @@
             this.pictureBox_close.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.pictureBox_close.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pictureBox_close.Image = global::YB_RTC_Grab.Properties.Resources.close;
-            this.pictureBox_close.Location = new System.Drawing.Point(519, 10);
+            this.pictureBox_close.Location = new System.Drawing.Point(416, 10);
             this.pictureBox_close.Name = "pictureBox_close";
             this.pictureBox_close.Size = new System.Drawing.Size(24, 24);
             this.pictureBox_close.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -110,48 +114,86 @@
             // 
             this.label_brand.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_brand.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(101)))), ((int)(((byte)(6)))));
-            this.label_brand.Location = new System.Drawing.Point(0, 198);
+            this.label_brand.Location = new System.Drawing.Point(0, 176);
             this.label_brand.Name = "label_brand";
-            this.label_brand.Size = new System.Drawing.Size(569, 23);
+            this.label_brand.Size = new System.Drawing.Size(468, 23);
             this.label_brand.TabIndex = 4;
-            this.label_brand.Text = "Tian Fa";
+            this.label_brand.Text = "Yong Bao";
             this.label_brand.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.label_brand.Visible = false;
+            this.label_brand.MouseDown += new System.Windows.Forms.MouseEventHandler(this.label_brand_MouseDown);
             // 
             // panel2
             // 
+            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(101)))), ((int)(((byte)(6)))));
-            this.panel2.Location = new System.Drawing.Point(411, 519);
+            this.panel2.Location = new System.Drawing.Point(309, 462);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(158, 10);
             this.panel2.TabIndex = 5;
             this.panel2.TabStop = true;
+            this.panel2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel2_MouseDown);
             // 
             // pictureBox_loader
             // 
             this.pictureBox_loader.Image = global::YB_RTC_Grab.Properties.Resources.rtc_loader;
-            this.pictureBox_loader.Location = new System.Drawing.Point(134, 179);
+            this.pictureBox_loader.Location = new System.Drawing.Point(85, 157);
             this.pictureBox_loader.Name = "pictureBox_loader";
             this.pictureBox_loader.Size = new System.Drawing.Size(300, 224);
             this.pictureBox_loader.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox_loader.TabIndex = 3;
             this.pictureBox_loader.TabStop = false;
             this.pictureBox_loader.Visible = false;
+            this.pictureBox_loader.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox_loader_MouseDown);
+            // 
+            // label_status
+            // 
+            this.label_status.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.label_status.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_status.Location = new System.Drawing.Point(0, 65);
+            this.label_status.Name = "label_status";
+            this.label_status.Padding = new System.Windows.Forms.Padding(0, 0, 10, 0);
+            this.label_status.Size = new System.Drawing.Size(466, 23);
+            this.label_status.TabIndex = 7;
+            this.label_status.Text = "-";
+            this.label_status.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.label_status.Visible = false;
+            this.label_status.MouseDown += new System.Windows.Forms.MouseEventHandler(this.label_status_MouseDown);
+            // 
+            // timer
+            // 
+            this.timer.Tick += new System.EventHandler(this.timer_Tick);
+            // 
+            // label_player_last_registered
+            // 
+            this.label_player_last_registered.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.label_player_last_registered.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_player_last_registered.Location = new System.Drawing.Point(0, 47);
+            this.label_player_last_registered.Name = "label_player_last_registered";
+            this.label_player_last_registered.Padding = new System.Windows.Forms.Padding(0, 0, 10, 0);
+            this.label_player_last_registered.Size = new System.Drawing.Size(466, 23);
+            this.label_player_last_registered.TabIndex = 8;
+            this.label_player_last_registered.Text = "-";
+            this.label_player_last_registered.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.label_player_last_registered.Visible = false;
+            this.label_player_last_registered.MouseDown += new System.Windows.Forms.MouseEventHandler(this.label_player_last_registered_MouseDown);
             // 
             // panel_cefsharp
             // 
             this.panel_cefsharp.Location = new System.Drawing.Point(10, 55);
             this.panel_cefsharp.Name = "panel_cefsharp";
-            this.panel_cefsharp.Size = new System.Drawing.Size(548, 459);
-            this.panel_cefsharp.TabIndex = 6;
+            this.panel_cefsharp.Size = new System.Drawing.Size(445, 402);
+            this.panel_cefsharp.TabIndex = 9;
             // 
             // Main_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(25)))), ((int)(((byte)(31)))));
-            this.ClientSize = new System.Drawing.Size(569, 525);
+            this.ClientSize = new System.Drawing.Size(466, 468);
             this.Controls.Add(this.panel_cefsharp);
+            this.Controls.Add(this.label_player_last_registered);
+            this.Controls.Add(this.label_status);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.label_brand);
             this.Controls.Add(this.pictureBox_loader);
@@ -159,6 +201,8 @@
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximumSize = new System.Drawing.Size(466, 468);
+            this.MinimumSize = new System.Drawing.Size(466, 468);
             this.Name = "Main_Form";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "YB RTC Grab";
@@ -183,7 +227,9 @@
         private System.Windows.Forms.Label label_brand;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label label_status;
+        private System.Windows.Forms.Timer timer;
+        private System.Windows.Forms.Label label_player_last_registered;
         private System.Windows.Forms.Panel panel_cefsharp;
     }
 }
-
