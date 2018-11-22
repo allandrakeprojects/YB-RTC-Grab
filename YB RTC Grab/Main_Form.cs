@@ -273,6 +273,14 @@ namespace YB_RTC_Grab
             __url = e.Address.ToString();
             if (e.Address.ToString().Equals("http://103.4.104.8/page/manager/login.jsp"))
             {
+                System.Media.SoundPlayer player = new System.Media.SoundPlayer(Properties.Resources.rtc_grab);
+                bool isPlaying = false;
+                if (__isStart)
+                {
+                    player.PlayLooping();
+                    isPlaying = true;
+                }
+                
                 __isStart = false;
                 
                 Invoke(new Action(() =>
@@ -296,6 +304,15 @@ namespace YB_RTC_Grab
                                     pictureBox_loader.Visible = false;
                                     label_status.Visible = false;
                                     label_player_last_registered.Visible = false;
+
+                                    if (isPlaying)
+                                    {
+                                        DialogResult dr = MessageBox.Show("You've been logout please login again.", "YB", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                        if (dr == DialogResult.OK)
+                                        {
+                                            player.Stop();
+                                        }
+                                    }
                                 }
                             }));
                         }
@@ -379,9 +396,16 @@ namespace YB_RTC_Grab
 
             if (label_status.Text.Contains("-"))
             {
-                MessageBox.Show("There's a problem to the server. Please call IT Support, thank you!", "YB", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                System.Media.SoundPlayer player = new System.Media.SoundPlayer(Properties.Resources.rtc_grab);
+                player.PlayLooping();
+
+                DialogResult dr = MessageBox.Show("There's a problem to the server. Please call IT Support, thank you!", "YB", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (dr == DialogResult.OK)
+                {
+                    player.Stop();
+                }
+                
                 __isClose = false;
-                Application.Restart();
                 Environment.Exit(0);
             }
         }
@@ -616,9 +640,16 @@ namespace YB_RTC_Grab
                 __count++;
                 if (__count == 5)
                 {
-                    MessageBox.Show("There's a problem to the server. Please call IT Support, thank you!", "FY", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    System.Media.SoundPlayer player = new System.Media.SoundPlayer(Properties.Resources.rtc_grab);
+                    player.PlayLooping();
+
+                    DialogResult dr = MessageBox.Show("There's a problem to the server. Please call IT Support, thank you!", "YB", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (dr == DialogResult.OK)
+                    {
+                        player.Stop();
+                    }
+
                     __isClose = false;
-                    Application.Restart();
                     Environment.Exit(0);
                 }
                 else
@@ -663,9 +694,16 @@ namespace YB_RTC_Grab
                 __count++;
                 if (__count == 5)
                 {
-                    MessageBox.Show("There's a problem to the server. Please call IT Support, thank you!", "FY", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    System.Media.SoundPlayer player = new System.Media.SoundPlayer(Properties.Resources.rtc_grab);
+                    player.PlayLooping();
+
+                    DialogResult dr = MessageBox.Show("There's a problem to the server. Please call IT Support, thank you!", "YB", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (dr == DialogResult.OK)
+                    {
+                        player.Stop();
+                    }
+
                     __isClose = false;
-                    Application.Restart();
                     Environment.Exit(0);
                 }
                 else
@@ -681,8 +719,7 @@ namespace YB_RTC_Grab
 
             return (long)(datetime - sTime).TotalMilliseconds;
         }
-
-
+        
         private void ___PlayerLastRegistered()
         {
             // handle last registered player
