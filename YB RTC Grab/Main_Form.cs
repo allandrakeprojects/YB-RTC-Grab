@@ -10,7 +10,6 @@ using System.Net;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -31,6 +30,7 @@ namespace YB_RTC_Grab
         private JToken __conn_id;
         private bool __isStart = false;
         private bool __isBreak = false;
+        List<string> __player_info = new List<string>();
         private string __player_last_username = "";
         private string __playerlist_cn;
         private string __playerlist_ea;
@@ -47,8 +47,11 @@ namespace YB_RTC_Grab
         private int __count = 0;
 
         // Deposit
+        List<string> __player_info_deposit = new List<string>();
         private int __index_deposit = 1;
         private int __count_deposit = 0;
+        private bool __isInsert_deposit = true;
+        private bool __isInsertDetect_deposit = true;
         private JObject __jo_deposit;
 
         // Drag Header to Move
@@ -309,6 +312,7 @@ namespace YB_RTC_Grab
                             {
                                 if (!__isStart)
                                 {
+                                    timer.Stop();
                                     args.Frame.ExecuteJavaScriptAsync("document.getElementById('username').value = 'testrain';");
                                     args.Frame.ExecuteJavaScriptAsync("document.getElementById('password').value = 'rain12345';");
                                     __isStart = false;
@@ -335,7 +339,7 @@ namespace YB_RTC_Grab
 
             if (e.Address.ToString().Equals("http://103.4.104.8/page/manager/member/search.jsp"))
             {
-                Invoke(new Action(() =>
+                Invoke(new Action(async () =>
                 {
                     if (!__isStart)
                     {
@@ -345,19 +349,23 @@ namespace YB_RTC_Grab
                         pictureBox_loader.Visible = true;
                         label_player_last_registered.Visible = true;
                         ___PlayerLastRegistered();
-                        ___GetPlayerListsRequestAsync(__index.ToString());
+                        await ___GetPlayerListsRequestAsync(__index.ToString());
                         ___GetPlayerListsRequestAsync_Deposit(__index_deposit.ToString());
-                        //Thread t = new Thread(delegate () { ___GetPlayerListsRequestAsync_Deposit(__index_deposit.ToString()); });
-                        //t.Start();
                     }
                 }));
             }
         }
 
-        private void timer_Tick(object sender, EventArgs e)
+        private async void timer_TickAsync(object sender, EventArgs e)
         {
             timer.Stop();
-            ___GetPlayerListsRequestAsync(__index.ToString());
+            await ___GetPlayerListsRequestAsync(__index.ToString());
+
+            if (__isInsert_deposit)
+            {
+                __isInsert_deposit = false;
+                ___GetPlayerListsRequestAsync_Deposit(__index_deposit.ToString());
+            }
         }
 
         [DllImport("user32.dll", EntryPoint = "FindWindow", SetLastError = true, CharSet = CharSet.Unicode)]
@@ -386,7 +394,7 @@ namespace YB_RTC_Grab
         }
         
         // ----- Functions
-        private async void ___GetPlayerListsRequestAsync(string index)
+        private async Task ___GetPlayerListsRequestAsync(string index)
         {
             try
             {
@@ -404,16 +412,15 @@ namespace YB_RTC_Grab
                 string responsebody = Encoding.UTF8.GetString(result);
                 var deserializeObject = JsonConvert.DeserializeObject(responsebody);
                 __jo = JObject.Parse(deserializeObject.ToString());
-                ___PlayerListAsync();
+                await ___PlayerListAsync();
             }
             catch (Exception err)
             {
-                ___GetPlayerListsRequestAsync(__index.ToString());
+                await ___GetPlayerListsRequestAsync(__index.ToString());
             }
         }
         
-        List<string> __player_info = new List<string>();
-        private async void ___PlayerListAsync()
+        private async Task ___PlayerListAsync()
         {
             
             for (int i = 0; i < 10; i++)
@@ -460,20 +467,11 @@ namespace YB_RTC_Grab
                     if (i == 9)
                     {
                         __index++;
-                        ___GetPlayerListsRequestAsync(__index.ToString());
+                        await ___GetPlayerListsRequestAsync(__index.ToString());
                     }
                 }
                 else
                 {
-                    if (!String.IsNullOrEmpty(__player_last_username.Trim()))
-                    {
-                        ___SavePlayerLastRegistered(__player_last_username);
-                        label_player_last_registered.Text = "Last Registered: " + Properties.Settings.Default.______last_registered_player;
-                    }
-                    //__player_info.Reverse();
-                    //MessageBox.Show(String.Join("," + Environment.NewLine, __player_info));
-                    
-                    // send to api 
                     if (__player_info.Count != 0)
                     {
                         __player_info.Reverse();
@@ -527,18 +525,13 @@ namespace YB_RTC_Grab
                                 {
                                     _email = value_inner;
                                 }
-                                // Agent
-                                else if (count == 7)
-                                {
-                                    _agent = value_inner;
-                                }
                                 // QQ
-                                else if (count == 8)
+                                else if (count == 7)
                                 {
                                     _qq = value_inner;
                                 }
                                 // WeChat
-                                else if (count == 9)
+                                else if (count == 8)
                                 {
                                     _wc = value_inner;
                                 }
@@ -547,11 +540,11 @@ namespace YB_RTC_Grab
                             // ----- Insert Data
                             using (StreamWriter file = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\test_yb.txt", true, Encoding.UTF8))
                             {
-                                file.WriteLine(_username + "*|*" + _name + "*|*" + _date_register + "*|*" + _date_deposit + "*|*" + _cn + "*|*" + _email + "*|*" + _agent + "*|*" + _qq + "*|*" + _wc + "*|* "+ __brand_code);
+                                file.WriteLine(_username + "*|*" + _name + "*|*" + _date_register + "*|*" + _date_deposit + "*|*" + _cn + "*|*" + _email + "*|*" + _agent + "*|*" + _qq + "*|*" + _wc);
                             }
                             using (StreamWriter file = new StreamWriter(Path.GetTempPath() + @"\test_yb.txt", true, Encoding.UTF8))
                             {
-                                file.WriteLine(_username + "*|*" + _name + "*|*" + _date_register + "*|*" + _date_deposit + "*|*" + _cn + "*|*" + _email + "*|*" + _agent + "*|*" + _qq + "*|*" + _wc + "*|* " + __brand_code);
+                                file.WriteLine(_username + "*|*" + _name + "*|*" + _date_register + "*|*" + _date_deposit + "*|*" + _cn + "*|*" + _email + "*|*" + _agent + "*|*" + _qq + "*|*" + _wc);
                             }
                             ___InsertData(_username, _name, _date_register, _date_deposit, _cn, _email, _agent, _qq, _wc, __brand_code);
                             __count = 0;
@@ -562,6 +555,13 @@ namespace YB_RTC_Grab
 
                         __player_info.Clear();
                     }
+
+                    if (!String.IsNullOrEmpty(__player_last_username.Trim()))
+                    {
+                        ___SavePlayerLastRegistered(__player_last_username);
+                        label_player_last_registered.Text = "Last Registered: " + Properties.Settings.Default.______last_registered_player;
+                    }
+                    
                     __index = 1;
                     timer.Start();
                     break;
@@ -628,7 +628,7 @@ namespace YB_RTC_Grab
                         ["token"] = token
                     };
 
-                    var response = wb.UploadValues("http://zeus.ssitex.com:8080/API/sendRTC", "POST", data);
+                    var response = wb.UploadValues("http://zeus.ssimakati.com:8080/API/sendRTC", "POST", data);
                     string responseInString = Encoding.UTF8.GetString(response);
                 }
             }
@@ -746,6 +746,7 @@ namespace YB_RTC_Grab
             panel_landing.Visible = false;
             timer_landing.Stop();
         }
+        
 
 
 
@@ -753,6 +754,33 @@ namespace YB_RTC_Grab
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
         // Deposit
         private async void ___GetPlayerListsRequestAsync_Deposit(string index)
         {
@@ -780,31 +808,69 @@ namespace YB_RTC_Grab
             }
         }
 
-        List<string> __player_info_deposit = new List<string>();
+
         private void ___PlayerListAsync_Deposit()
         {
+            string path = @"\rtcgrab_yb_deposit.txt";
+            
             for (int i = 0; i < 10; i++)
             {
+                if (!File.Exists(Path.GetTempPath() + path))
+                {
+                    using (StreamWriter file = new StreamWriter(Path.GetTempPath() + path, true, Encoding.UTF8))
+                    {
+                        file.WriteLine("test123*|*");
+                        file.Close();
+                    }
+                }
+                
                 JToken username = __jo_deposit.SelectToken("$.aaData[" + i + "].userId").ToString();
+                bool isInsert = false;
+
+                using (StreamReader sr = File.OpenText(Path.GetTempPath() + path))
+                {
+                    string s = String.Empty;
+                    while ((s = sr.ReadLine()) != null)
+                    {
+                        Application.DoEvents();
+
+                        if (s == username.ToString())
+                        {
+                            isInsert = true;
+                            break;
+                        }
+                        else
+                        {
+                            isInsert = false;
+                        }
+                    }
+                    sr.Close();
+                }
+                
+                if (i == 9)
+                {
+                    __isInsertDetect_deposit = false;
+                    __index_deposit++;
+                    ___GetPlayerListsRequestAsync_Deposit(__index_deposit.ToString());
+                }
+
                 if (username.ToString() != Properties.Settings.Default.______last_registered_player_deposit)
                 {
                     JToken ldd = __jo_deposit.SelectToken("$.aaData[" + i + "].lastDepositTime").ToString();
-
                     if (!String.IsNullOrEmpty(ldd.ToString()))
                     {
                         DateTime ldd_replace = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Math.Round(Convert.ToDouble(ldd.ToString()) / 1000d)).ToLocalTime();
 
-                        __player_info_deposit.Add(username + "*|*" + ldd_replace.ToString("yyyy-MM-dd HH:mm:ss"));
-                        using (StreamWriter file = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\test_yb_deposit.txt", true, Encoding.UTF8))
+                        if (!isInsert)
                         {
-                            file.WriteLine(username + "*|*" + ldd_replace.ToString("yyyy-MM-dd HH:mm:ss"));
-                        }
-                    }
+                            __player_info_deposit.Add(username + "*|*" + ldd_replace.ToString("yyyy-MM-dd HH:mm:ss"));
 
-                    if (i == 9)
-                    {
-                        __index_deposit++;
-                        ___GetPlayerListsRequestAsync_Deposit(__index_deposit.ToString());
+                            using (StreamWriter file = new StreamWriter(Path.GetTempPath() + path, true, Encoding.UTF8))
+                            {
+                                file.WriteLine(username);
+                                file.Close();
+                            }
+                        }
                     }
                 }
                 else
@@ -842,19 +908,18 @@ namespace YB_RTC_Grab
                         }
 
                         __player_info_deposit.Clear();
+                        __index_deposit = 1;
+                        __isInsertDetect_deposit = true;
                     }
-                    __index_deposit = 1;
-                    timer_deposit.Start();
+                        
                     break;
-
                 }
             }
-        }
 
-        private void timer_deposit_Tick(object sender, EventArgs e)
-        {
-            timer_deposit.Stop();
-            ___GetPlayerListsRequestAsync_Deposit(__index_deposit.ToString());
+            if (__isInsertDetect_deposit)
+            {
+                __isInsert_deposit = true;
+            }
         }
 
         private void ___InsertData_Deposit(string username, string last_deposit_date, string brand)
@@ -878,7 +943,7 @@ namespace YB_RTC_Grab
                         ["token"] = token
                     };
 
-                    var response = wb.UploadValues("http://zeus.ssitex.com:8080/API/sendRTCdep", "POST", data);
+                    var response = wb.UploadValues("http://zeus.ssimakati.com:8080/API/sendRTCdep", "POST", data);
                 }
             }
             catch (Exception err)
@@ -926,7 +991,7 @@ namespace YB_RTC_Grab
                         ["token"] = token
                     };
 
-                    var response = wb.UploadValues("http://zeus.ssitex.com:8080/API/sendRTCdep", "POST", data);
+                    var response = wb.UploadValues("http://zeus.ssimakati.com:8080/API/sendRTCdep", "POST", data);
                 }
             }
             catch (Exception err)
