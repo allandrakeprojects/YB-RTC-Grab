@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Runtime.InteropServices;
@@ -366,6 +367,7 @@ namespace YB_RTC_Grab
             if (__isInsert_deposit)
             {
                 __isInsert_deposit = false;
+                __detectInsert_deposit = false;
                 __isInsertDetect_deposit = false;
                 ___GetPlayerListsRequestAsync_Deposit(__index_deposit.ToString());
             }
@@ -731,11 +733,11 @@ namespace YB_RTC_Grab
             // todo
             if (Properties.Settings.Default.______last_registered_player == "")
             {
-                Properties.Settings.Default.______last_registered_player = "hexia1188";
+                Properties.Settings.Default.______last_registered_player = "ljq1001";
                 Properties.Settings.Default.Save();
             }
 
-            Properties.Settings.Default.______last_registered_player_deposit = "hexia1188";
+            Properties.Settings.Default.______last_registered_player_deposit = "ljq1001";
             Properties.Settings.Default.Save();
 
             label_player_last_registered.Text = "Last Registered: " + Properties.Settings.Default.______last_registered_player;
@@ -936,7 +938,6 @@ namespace YB_RTC_Grab
                     __player_info_deposit.Clear();
                     __index_deposit = 1;
                     __isInsertDetect_deposit = true;
-                    __detectInsert_deposit = false;
 
                     break;
                 }
@@ -1041,6 +1042,63 @@ namespace YB_RTC_Grab
                 else
                 {
                     ___InsertData_Deposit(username, last_deposit_date, brand);
+                }
+            }
+        }
+
+        private void timer_deposit_last_registered_Tick(object sender, EventArgs e)
+        {
+            string path = Path.GetTempPath() + @"\rtcgrab_yb_deposit.txt";
+            if (__isInsert_deposit)
+            {
+                if (label_player_last_registered.Text != "-" && label_player_last_registered.Text.Trim() != "")
+                {
+                    if (Properties.Settings.Default.______detect_deposit == "")
+                    {
+                        DateTime today = DateTime.Now;
+                        DateTime date = today.AddDays(1);
+                        Properties.Settings.Default.______detect_deposit = date.ToString("yyyy-MM-dd 23");
+                        Properties.Settings.Default.Save();
+                    }
+                    else
+                    {
+                        DateTime today = DateTime.Now;
+                        if (Properties.Settings.Default.______detect_deposit == today.ToString("yyyy-MM-dd HH"))
+                        {
+                            Properties.Settings.Default.______detect_deposit = "";
+                            Properties.Settings.Default.Save();
+
+                            Properties.Settings.Default.______last_registered_player_deposit = label_player_last_registered.Text;
+                            Properties.Settings.Default.Save();
+
+                            if (File.Exists(path))
+                            {
+                                File.Delete(path);
+                            }
+                        }
+                        else
+                        {
+                            string start_datetime = today.ToString("yyyy-MM-dd HH");
+                            DateTime start = DateTime.ParseExact(start_datetime, "yyyy-MM-dd HH", CultureInfo.InvariantCulture);
+
+                            string end_datetime = Properties.Settings.Default.______detect_deposit;
+                            DateTime end = DateTime.ParseExact(end_datetime, "yyyy-MM-dd HH", CultureInfo.InvariantCulture);
+
+                            if (start > end)
+                            {
+                                Properties.Settings.Default.______detect_deposit = "";
+                                Properties.Settings.Default.Save();
+
+                                Properties.Settings.Default.______last_registered_player_deposit = label_player_last_registered.Text;
+                                Properties.Settings.Default.Save();
+
+                                if (File.Exists(path))
+                                {
+                                    File.Delete(path);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
