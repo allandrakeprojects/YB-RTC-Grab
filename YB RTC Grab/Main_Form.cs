@@ -10,6 +10,7 @@ using System.Net;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -50,9 +51,10 @@ namespace YB_RTC_Grab
         List<string> __player_info_deposit = new List<string>();
         private int __index_deposit = 1;
         private int __count_deposit = 0;
-        private bool __isInsert_deposit = true;
-        private bool __isInsertDetect_deposit = true;
+        private bool __isInsert_deposit = false;
+        private bool __isInsertDetect_deposit = false;
         private JObject __jo_deposit;
+        private bool __detectInsert_deposit = false;
 
         // Drag Header to Move
         [DllImport("user32.dll")]
@@ -364,6 +366,7 @@ namespace YB_RTC_Grab
             if (__isInsert_deposit)
             {
                 __isInsert_deposit = false;
+                __isInsertDetect_deposit = false;
                 ___GetPlayerListsRequestAsync_Deposit(__index_deposit.ToString());
             }
         }
@@ -469,6 +472,9 @@ namespace YB_RTC_Grab
                         __index++;
                         await ___GetPlayerListsRequestAsync(__index.ToString());
                     }
+
+                    __playerlist_qq = "";
+                    __playerlist_wc = "";
                 }
                 else
                 {
@@ -546,11 +552,11 @@ namespace YB_RTC_Grab
                             {
                                 file.WriteLine(_username + "*|*" + _name + "*|*" + _date_register + "*|*" + _date_deposit + "*|*" + _cn + "*|*" + _email + "*|*" + _agent + "*|*" + _qq + "*|*" + _wc);
                             }
-                            ___InsertData(_username, _name, _date_register, _date_deposit, _cn, _email, _agent, _qq, _wc, __brand_code);
+                            
+                            Thread t = new Thread(delegate () { ___InsertData(_username, _name, _date_register, _date_deposit, _cn, _email, _agent, _qq, _wc, __brand_code); });
+                            t.Start();
+                            
                             __count = 0;
-
-                            __playerlist_qq = "";
-                            __playerlist_wc = "";
                         }
 
                         __player_info.Clear();
@@ -807,12 +813,10 @@ namespace YB_RTC_Grab
                 ___GetPlayerListsRequestAsync_Deposit(__index_deposit.ToString());
             }
         }
-
-
+        
         private void ___PlayerListAsync_Deposit()
         {
             string path = @"\rtcgrab_yb_deposit.txt";
-            
             for (int i = 0; i < 10; i++)
             {
                 if (!File.Exists(Path.GetTempPath() + path))
@@ -825,50 +829,69 @@ namespace YB_RTC_Grab
                 }
                 
                 JToken username = __jo_deposit.SelectToken("$.aaData[" + i + "].userId").ToString();
+                
+                if (username.ToString() == Properties.Settings.Default.______last_registered_player)
+                {
+                    __detectInsert_deposit = true;
+                }
+                
                 bool isInsert = false;
 
-                using (StreamReader sr = File.OpenText(Path.GetTempPath() + path))
+                if (__detectInsert_deposit)
                 {
-                    string s = String.Empty;
-                    while ((s = sr.ReadLine()) != null)
+                    using (StreamReader sr = File.OpenText(Path.GetTempPath() + path))
                     {
-                        Application.DoEvents();
+                        string s = String.Empty;
+                        while ((s = sr.ReadLine()) != null)
+                        {
+                            Application.DoEvents();
 
-                        if (s == username.ToString())
-                        {
-                            isInsert = true;
-                            break;
+                            if (s == username.ToString())
+                            {
+                                isInsert = true;
+                                break;
+                            }
+                            else
+                            {
+                                isInsert = false;
+                            }
                         }
-                        else
-                        {
-                            isInsert = false;
-                        }
+                        sr.Close();
                     }
-                    sr.Close();
                 }
                 
                 if (i == 9)
                 {
-                    __isInsertDetect_deposit = false;
                     __index_deposit++;
-                    ___GetPlayerListsRequestAsync_Deposit(__index_deposit.ToString());
+                    
+                    if (__detectInsert_deposit)
+                    {
+                        if (!__isInsertDetect_deposit)
+                        {
+                            __isInsertDetect_deposit = false;
+                            ___GetPlayerListsRequestAsync_Deposit(__index_deposit.ToString());
+                        }
+                    }
                 }
 
                 if (username.ToString() != Properties.Settings.Default.______last_registered_player_deposit)
                 {
-                    JToken ldd = __jo_deposit.SelectToken("$.aaData[" + i + "].lastDepositTime").ToString();
-                    if (!String.IsNullOrEmpty(ldd.ToString()))
+                    if (__detectInsert_deposit)
                     {
-                        DateTime ldd_replace = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Math.Round(Convert.ToDouble(ldd.ToString()) / 1000d)).ToLocalTime();
-
-                        if (!isInsert)
+                        JToken ldd = __jo_deposit.SelectToken("$.aaData[" + i + "].lastDepositTime").ToString();
+                        if (!String.IsNullOrEmpty(ldd.ToString()))
                         {
-                            __player_info_deposit.Add(username + "*|*" + ldd_replace.ToString("yyyy-MM-dd HH:mm:ss"));
+                            DateTime ldd_replace = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Math.Round(Convert.ToDouble(ldd.ToString()) / 1000d)).ToLocalTime();
 
-                            using (StreamWriter file = new StreamWriter(Path.GetTempPath() + path, true, Encoding.UTF8))
+                            if (!isInsert)
                             {
-                                file.WriteLine(username);
-                                file.Close();
+                                __player_info_deposit.Add(username + "*|*" + ldd_replace.ToString("yyyy-MM-dd HH:mm:ss"));
+
+                                using (StreamWriter file = new StreamWriter(Path.GetTempPath() + path, true, Encoding.UTF8))
+                                {
+                                    file.WriteLine(username);
+                                    file.Close();
+                                }
                             }
                         }
                     }
@@ -903,15 +926,18 @@ namespace YB_RTC_Grab
                                 }
                             }
 
-                            ___InsertData_Deposit(_username, _date_deposit, __brand_code);
+                            Thread t = new Thread(delegate () { ___InsertData_Deposit(_username, _date_deposit, __brand_code); });
+                            t.Start();
+                            
                             __count_deposit = 0;
                         }
-
-                        __player_info_deposit.Clear();
-                        __index_deposit = 1;
-                        __isInsertDetect_deposit = true;
                     }
-                        
+
+                    __player_info_deposit.Clear();
+                    __index_deposit = 1;
+                    __isInsertDetect_deposit = true;
+                    __detectInsert_deposit = false;
+
                     break;
                 }
             }
@@ -944,6 +970,7 @@ namespace YB_RTC_Grab
                     };
 
                     var response = wb.UploadValues("http://zeus.ssimakati.com:8080/API/sendRTCdep", "POST", data);
+                    string responseInString = Encoding.UTF8.GetString(response);
                 }
             }
             catch (Exception err)
@@ -991,7 +1018,7 @@ namespace YB_RTC_Grab
                         ["token"] = token
                     };
 
-                    var response = wb.UploadValues("http://zeus.ssimakati.com:8080/API/sendRTCdep", "POST", data);
+                    var response = wb.UploadValues("http://zeus2.ssitex.com:8080/API/sendRTCdep", "POST", data);
                 }
             }
             catch (Exception err)
