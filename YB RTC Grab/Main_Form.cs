@@ -610,7 +610,7 @@ namespace YB_RTC_Grab
         {
             try
             {
-                string password = username + date_register + "youdieidie";
+                string password = username.ToLower() + date_register + "youdieidie";
                 byte[] encodedPassword = new UTF8Encoding().GetBytes(password);
                 byte[] hash = ((HashAlgorithm)CryptoConfig.CreateFromName("MD5")).ComputeHash(encodedPassword);
                 string token = BitConverter.ToString(hash)
@@ -666,7 +666,7 @@ namespace YB_RTC_Grab
         {
             try
             {
-                string password = username + date_register + "youdieidie";
+                string password = username.ToLower() + date_register + "youdieidie";
                 byte[] encodedPassword = new UTF8Encoding().GetBytes(password);
                 byte[] hash = ((HashAlgorithm)CryptoConfig.CreateFromName("MD5")).ComputeHash(encodedPassword);
                 string token = BitConverter.ToString(hash)
@@ -952,7 +952,7 @@ namespace YB_RTC_Grab
         {
             try
             {
-                string password = username + last_deposit_date + "youdieidie";
+                string password = username.ToLower() + last_deposit_date + "youdieidie";
                 byte[] encodedPassword = new UTF8Encoding().GetBytes(password);
                 byte[] hash = ((HashAlgorithm)CryptoConfig.CreateFromName("MD5")).ComputeHash(encodedPassword);
                 string token = BitConverter.ToString(hash)
@@ -1001,7 +1001,7 @@ namespace YB_RTC_Grab
         {
             try
             {
-                string password = username + last_deposit_date + "youdieidie";
+                string password = username.ToLower() + last_deposit_date + "youdieidie";
                 byte[] encodedPassword = new UTF8Encoding().GetBytes(password);
                 byte[] hash = ((HashAlgorithm)CryptoConfig.CreateFromName("MD5")).ComputeHash(encodedPassword);
                 string token = BitConverter.ToString(hash)
