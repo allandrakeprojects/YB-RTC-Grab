@@ -156,8 +156,7 @@ namespace YB_RTC_Grab
         public Main_Form()
         {
             InitializeComponent();
-
-            ___DepositLastRegistered();
+            
             timer_landing.Start();
         }
 
@@ -879,8 +878,6 @@ namespace YB_RTC_Grab
                         }
                     }
                 }
-
-                MessageBox.Show(username.ToString() + "\n" +  Properties.Settings.Default.______last_registered_player_deposit);
 
                 if (username.ToString() != Properties.Settings.Default.______last_registered_player_deposit)
                 {
