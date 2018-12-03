@@ -369,6 +369,7 @@ namespace YB_RTC_Grab
                 __isInsert_deposit = false;
                 __detectInsert_deposit = false;
                 __isInsertDetect_deposit = false;
+                MessageBox.Show("detect");
                 ___GetPlayerListsRequestAsync_Deposit(__index_deposit.ToString());
             }
         }
