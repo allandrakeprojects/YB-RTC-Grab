@@ -32,7 +32,6 @@ namespace YB_RTC_Grab
         private JToken __conn_id;
         private bool __isStart = false;
         private bool __isBreak = false;
-        List<string> __player_info = new List<string>();
         private string __player_last_username = "";
         private string __playerlist_cn;
         private string __playerlist_ea;
@@ -49,7 +48,6 @@ namespace YB_RTC_Grab
         private int __count = 0;
 
         // Deposit
-        List<string> __player_info_deposit = new List<string>();
         private int __index_deposit = 1;
         private int __count_deposit = 0;
         private bool __isInsert_deposit = false;
@@ -238,7 +236,7 @@ namespace YB_RTC_Grab
         // Click Close
         private void pictureBox_close_Click(object sender, EventArgs e)
         {
-            DialogResult dr = MessageBox.Show("Exit the program?", "YB", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult dr = MessageBox.Show("Exit the program?", "YB RTC Grab", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (dr == DialogResult.Yes)
             {
                 __isClose = true;
@@ -257,7 +255,7 @@ namespace YB_RTC_Grab
         {
             if (!__isClose)
             {
-                DialogResult dr = MessageBox.Show("Exit the program?", "YB", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                DialogResult dr = MessageBox.Show("Exit the program?", "YB RTC Grab", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (dr == DialogResult.No)
                 {
                     e.Cancel = true;
@@ -316,8 +314,8 @@ namespace YB_RTC_Grab
                                 if (!__isStart)
                                 {
                                     timer.Stop();
-                                    args.Frame.ExecuteJavaScriptAsync("document.getElementById('username').value = 'testrain';");
-                                    args.Frame.ExecuteJavaScriptAsync("document.getElementById('password').value = 'rain12345';");
+                                    args.Frame.ExecuteJavaScriptAsync("document.getElementById('username').value = 'ybrtcgrab';");
+                                    args.Frame.ExecuteJavaScriptAsync("document.getElementById('password').value = 'rg123888';");
                                     __isStart = false;
                                     panel_cefsharp.Visible = true;
                                     label_player_last_registered.Text = "-";
@@ -327,7 +325,7 @@ namespace YB_RTC_Grab
 
                                     if (isPlaying)
                                     {
-                                        DialogResult dr = MessageBox.Show("You've been logout please login again.", "YB", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                        DialogResult dr = MessageBox.Show("You've been logout please login again.", "YB RTC Grab", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                         if (dr == DialogResult.OK)
                                         {
                                             player.Stop();
@@ -339,8 +337,8 @@ namespace YB_RTC_Grab
                     };
                 }));
             }
-
-            if (e.Address.ToString().Equals("http://103.4.104.8/page/manager/member/search.jsp"))
+            
+            if (e.Address.ToString().Equals("http://103.4.104.8/page/manager/member/search.jsp") || e.Address.ToString().Equals("http://103.4.104.8/page/manager/dashboard.jsp"))
             {
                 Invoke(new Action(async () =>
                 {
@@ -352,8 +350,8 @@ namespace YB_RTC_Grab
                         pictureBox_loader.Visible = true;
                         label_player_last_registered.Visible = true;
                         ___PlayerLastRegistered();
-                        await ___GetPlayerListsRequestAsync(__index.ToString());
-                        ___GetPlayerListsRequestAsync_Deposit(__index_deposit.ToString());
+                        await ___GetPlayerListsRequest();
+                        ___GetPlayerListsRequest_Deposit();
                     }
                 }));
             }
@@ -362,15 +360,12 @@ namespace YB_RTC_Grab
         private async void timer_TickAsync(object sender, EventArgs e)
         {
             timer.Stop();
-            await ___GetPlayerListsRequestAsync(__index.ToString());
+            await ___GetPlayerListsRequest();
 
             if (__isInsert_deposit)
             {
                 __isInsert_deposit = false;
-                __detectInsert_deposit = false;
-                __isInsertDetect_deposit = false;
-                MessageBox.Show("detect");
-                ___GetPlayerListsRequestAsync_Deposit(__index_deposit.ToString());
+                ___GetPlayerListsRequest_Deposit();
             }
         }
 
@@ -400,7 +395,7 @@ namespace YB_RTC_Grab
         }
 
         // ----- Functions
-        private async Task ___GetPlayerListsRequestAsync(string index)
+        private async Task ___GetPlayerListsRequest()
         {
             try
             {
@@ -414,7 +409,7 @@ namespace YB_RTC_Grab
                 wc.Encoding = Encoding.UTF8;
                 wc.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
 
-                byte[] result = await wc.DownloadDataTaskAsync("http://103.4.104.8/manager/member/searchMember?userId=&userName=&email=&lastDepositSince=&lastBetTimeSince=&noLoginSince=&loginIp=&vipLevel=-1&phoneNumber=&registeredDateStart=&registeredDateEnd=&birthOfDateStart=&birthOfDateEnd=&searchType=1&affiliateCode=All&pageNumber=" + index + "&pageSize=10&sortCondition=1&sortName=sign_up_time&sortOrder=1&searchText=");
+                byte[] result = await wc.DownloadDataTaskAsync("http://103.4.104.8/manager/member/searchMember?userId=&userName=&email=&lastDepositSince=&lastBetTimeSince=&noLoginSince=&loginIp=&vipLevel=-1&phoneNumber=&registeredDateStart=&registeredDateEnd=&birthOfDateStart=&birthOfDateEnd=&searchType=1&affiliateCode=All&pageNumber=1&pageSize=5000&sortCondition=1&sortName=sign_up_time&sortOrder=1&searchText=");
                 string responsebody = Encoding.UTF8.GetString(result);
                 var deserializeObject = JsonConvert.DeserializeObject(responsebody);
                 __jo = JObject.Parse(deserializeObject.ToString());
@@ -422,13 +417,14 @@ namespace YB_RTC_Grab
             }
             catch (Exception err)
             {
-                await ___GetPlayerListsRequestAsync(__index.ToString());
+                await ___GetPlayerListsRequest();
             }
         }
 
         private async Task ___PlayerListAsync()
         {
-
+            List<string> player_info = new List<string>();
+            
             for (int i = 0; i < 10; i++)
             {
                 JToken username = __jo.SelectToken("$.aaData[" + i + "].userId").ToString();
@@ -452,7 +448,7 @@ namespace YB_RTC_Grab
                         DateTime date_time_register_replace = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Math.Round(Convert.ToDouble(date_time_register.ToString()) / 1000d)).ToLocalTime();
                         DateTime ldd_replace = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Math.Round(Convert.ToDouble(ldd.ToString()) / 1000d)).ToLocalTime();
 
-                        __player_info.Add(username + "*|*" + name + "*|*" + date_time_register_replace.ToString("yyyy-MM-dd HH:mm:ss") + "*|*" + ldd_replace.ToString("yyyy-MM-dd HH:mm:ss") + "*|*" + cn + "*|*" + email + "*|*" + __playerlist_qq + "*|*" + __playerlist_wc);
+                        player_info.Add(username + "*|*" + name + "*|*" + date_time_register_replace.ToString("yyyy-MM-dd HH:mm:ss") + "*|*" + ldd_replace.ToString("yyyy-MM-dd HH:mm:ss") + "*|*" + cn + "*|*" + email + "*|*" + __playerlist_qq + "*|*" + __playerlist_wc);
                     }
                     else
                     {
@@ -460,20 +456,14 @@ namespace YB_RTC_Grab
                         {
                             DateTime date_time_register_replace = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Math.Round(Convert.ToDouble(date_time_register.ToString()) / 1000d)).ToLocalTime();
 
-                            __player_info.Add(username + "*|*" + name + "*|*" + date_time_register_replace.ToString("yyyy-MM-dd HH:mm:ss") + "*|*" + "" + "*|*" + cn + "*|*" + email + "*|*" + __playerlist_qq + "*|*" + __playerlist_wc);
+                            player_info.Add(username + "*|*" + name + "*|*" + date_time_register_replace.ToString("yyyy-MM-dd HH:mm:ss") + "*|*" + "" + "*|*" + cn + "*|*" + email + "*|*" + __playerlist_qq + "*|*" + __playerlist_wc);
                         }
                         else
                         {
                             DateTime ldd_replace = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Math.Round(Convert.ToDouble(ldd.ToString()) / 1000d)).ToLocalTime();
 
-                            __player_info.Add(username + "*|*" + name + "*|*" + "" + "*|*" + ldd_replace.ToString("yyyy-MM-dd HH:mm:ss") + "*|*" + cn + "*|*" + email + "*|*" + __playerlist_qq + "*|*" + __playerlist_wc);
+                            player_info.Add(username + "*|*" + name + "*|*" + "" + "*|*" + ldd_replace.ToString("yyyy-MM-dd HH:mm:ss") + "*|*" + cn + "*|*" + email + "*|*" + __playerlist_qq + "*|*" + __playerlist_wc);
                         }
-                    }
-
-                    if (i == 9)
-                    {
-                        __index++;
-                        await ___GetPlayerListsRequestAsync(__index.ToString());
                     }
 
                     __playerlist_qq = "";
@@ -481,10 +471,10 @@ namespace YB_RTC_Grab
                 }
                 else
                 {
-                    if (__player_info.Count != 0)
+                    if (player_info.Count != 0)
                     {
-                        __player_info.Reverse();
-                        string __player_info_get = String.Join(",", __player_info);
+                        player_info.Reverse();
+                        string __player_info_get = String.Join(",", player_info);
                         string[] values = __player_info_get.Split(',');
                         foreach (string value in values)
                         {
@@ -547,11 +537,11 @@ namespace YB_RTC_Grab
                             }
 
                             // ----- Insert Data
-                            using (StreamWriter file = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\test_yb.txt", true, Encoding.UTF8))
-                            {
-                                file.WriteLine(_username + "*|*" + _name + "*|*" + _date_register + "*|*" + _date_deposit + "*|*" + _cn + "*|*" + _email + "*|*" + _agent + "*|*" + _qq + "*|*" + _wc);
-                            }
-                            using (StreamWriter file = new StreamWriter(Path.GetTempPath() + @"\test_yb.txt", true, Encoding.UTF8))
+                            //using (StreamWriter file = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\rtcgrab_yb.txt", true, Encoding.UTF8))
+                            //{
+                            //    file.WriteLine(_username + "*|*" + _name + "*|*" + _date_register + "*|*" + _date_deposit + "*|*" + _cn + "*|*" + _email + "*|*" + _agent + "*|*" + _qq + "*|*" + _wc);
+                            //}
+                            using (StreamWriter file = new StreamWriter(Path.GetTempPath() + @"\rtcgrab_yb.txt", true, Encoding.UTF8))
                             {
                                 file.WriteLine(_username + "*|*" + _name + "*|*" + _date_register + "*|*" + _date_deposit + "*|*" + _cn + "*|*" + _email + "*|*" + _agent + "*|*" + _qq + "*|*" + _wc);
                             }
@@ -561,8 +551,6 @@ namespace YB_RTC_Grab
 
                             __count = 0;
                         }
-
-                        __player_info.Clear();
                     }
 
                     if (!String.IsNullOrEmpty(__player_last_username.Trim()))
@@ -570,8 +558,8 @@ namespace YB_RTC_Grab
                         ___SavePlayerLastRegistered(__player_last_username);
                         label_player_last_registered.Text = "Last Registered: " + Properties.Settings.Default.______last_registered_player;
                     }
-
-                    __index = 1;
+                    
+                    player_info.Clear();
                     timer.Start();
                     break;
 
@@ -649,7 +637,7 @@ namespace YB_RTC_Grab
                     System.Media.SoundPlayer player = new System.Media.SoundPlayer(Properties.Resources.rtc_grab);
                     player.PlayLooping();
 
-                    DialogResult dr = MessageBox.Show("There's a problem to the server. Please call IT Support, thank you!", "YB", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    DialogResult dr = MessageBox.Show("There's a problem to the server. Please call IT Support, thank you!", "YB RTC Grab", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     if (dr == DialogResult.OK)
                     {
                         player.Stop();
@@ -705,7 +693,7 @@ namespace YB_RTC_Grab
                     System.Media.SoundPlayer player = new System.Media.SoundPlayer(Properties.Resources.rtc_grab);
                     player.PlayLooping();
 
-                    DialogResult dr = MessageBox.Show("There's a problem to the server. Please call IT Support, thank you!", "YB", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    DialogResult dr = MessageBox.Show("There's a problem to the server. Please call IT Support, thank you!", "YB RTC Grab", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     if (dr == DialogResult.OK)
                     {
                         player.Stop();
@@ -734,13 +722,13 @@ namespace YB_RTC_Grab
             // todo
             if (Properties.Settings.Default.______last_registered_player == "")
             {
-                Properties.Settings.Default.______last_registered_player = "bbkjj147";
+                Properties.Settings.Default.______last_registered_player = "ysb3889";
                 Properties.Settings.Default.Save();
             }
 
             if (Properties.Settings.Default.______last_registered_player_deposit == "")
             {
-                Properties.Settings.Default.______last_registered_player_deposit = "bbkjj147";
+                Properties.Settings.Default.______last_registered_player_deposit = "ysb3889";
                 Properties.Settings.Default.Save();
             }
 
@@ -794,7 +782,7 @@ namespace YB_RTC_Grab
 
 
         // Deposit
-        private async void ___GetPlayerListsRequestAsync_Deposit(string index)
+        private async void ___GetPlayerListsRequest_Deposit()
         {
             try
             {
@@ -808,7 +796,7 @@ namespace YB_RTC_Grab
                 wc.Encoding = Encoding.UTF8;
                 wc.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
 
-                byte[] result = await wc.DownloadDataTaskAsync("http://103.4.104.8/manager/member/searchMember?userId=&userName=&email=&lastDepositSince=&lastBetTimeSince=&noLoginSince=&loginIp=&vipLevel=-1&phoneNumber=&registeredDateStart=&registeredDateEnd=&birthOfDateStart=&birthOfDateEnd=&searchType=1&affiliateCode=All&pageNumber=" + index + "&pageSize=10&sortCondition=1&sortName=sign_up_time&sortOrder=1&searchText=");
+                byte[] result = await wc.DownloadDataTaskAsync("http://103.4.104.8/manager/member/searchMember?userId=&userName=&email=&lastDepositSince=&lastBetTimeSince=&noLoginSince=&loginIp=&vipLevel=-1&phoneNumber=&registeredDateStart=&registeredDateEnd=&birthOfDateStart=&birthOfDateEnd=&searchType=1&affiliateCode=All&pageNumber=1&pageSize=5000&sortCondition=1&sortName=sign_up_time&sortOrder=1&searchText=");
                 string responsebody = Encoding.UTF8.GetString(result);
                 var deserializeObject = JsonConvert.DeserializeObject(responsebody);
                 __jo_deposit = JObject.Parse(deserializeObject.ToString());
@@ -816,14 +804,15 @@ namespace YB_RTC_Grab
             }
             catch (Exception err)
             {
-                ___GetPlayerListsRequestAsync_Deposit(__index_deposit.ToString());
+                ___GetPlayerListsRequest_Deposit();
             }
         }
 
         private void ___PlayerListAsync_Deposit()
         {
+            List<string> player_info = new List<string>();
             string path = @"\rtcgrab_yb_deposit.txt";
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 5000; i++)
             {
                 if (!File.Exists(Path.GetTempPath() + path))
                 {
@@ -866,20 +855,6 @@ namespace YB_RTC_Grab
                     }
                 }
 
-                if (i == 9)
-                {
-                    __index_deposit++;
-
-                    if (__detectInsert_deposit)
-                    {
-                        if (!__isInsertDetect_deposit)
-                        {
-                            __isInsertDetect_deposit = false;
-                            ___GetPlayerListsRequestAsync_Deposit(__index_deposit.ToString());
-                        }
-                    }
-                }
-
                 if (username.ToString() != Properties.Settings.Default.______last_registered_player_deposit)
                 {
                     if (__detectInsert_deposit)
@@ -891,7 +866,7 @@ namespace YB_RTC_Grab
 
                             if (!isInsert)
                             {
-                                __player_info_deposit.Add(username + "*|*" + ldd_replace.ToString("yyyy-MM-dd HH:mm:ss"));
+                                player_info.Add(username + "*|*" + ldd_replace.ToString("yyyy-MM-dd HH:mm:ss"));
 
                                 using (StreamWriter file = new StreamWriter(Path.GetTempPath() + path, true, Encoding.UTF8))
                                 {
@@ -904,10 +879,10 @@ namespace YB_RTC_Grab
                 }
                 else
                 {
-                    if (__player_info_deposit.Count != 0)
+                    if (player_info.Count != 0)
                     {
-                        __player_info_deposit.Reverse();
-                        string __player_info_deposit_get = String.Join(",", __player_info_deposit);
+                        player_info.Reverse();
+                        string __player_info_deposit_get = String.Join(",", player_info);
                         string[] values = __player_info_deposit_get.Split(',');
                         foreach (string value in values)
                         {
@@ -939,19 +914,15 @@ namespace YB_RTC_Grab
                         }
                     }
 
-                    __player_info_deposit.Clear();
-                    __index_deposit = 1;
-                    __isInsertDetect_deposit = true;
+                    player_info.Clear();
+                    __detectInsert_deposit = false;
 
                     break;
                 }
             }
 
-            if (__isInsertDetect_deposit)
-            {
-                ___DepositLastRegistered();
-                __isInsert_deposit = true;
-            }
+            ___DepositLastRegistered();
+            __isInsert_deposit = true;
         }
 
         private void ___InsertData_Deposit(string username, string last_deposit_date, string brand)
@@ -987,7 +958,7 @@ namespace YB_RTC_Grab
                     System.Media.SoundPlayer player = new System.Media.SoundPlayer(Properties.Resources.rtc_grab);
                     player.PlayLooping();
 
-                    DialogResult dr = MessageBox.Show("There's a problem to the server. Please call IT Support, thank you!", "CL", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    DialogResult dr = MessageBox.Show("There's a problem to the server. Please call IT Support, thank you!", "YB RTC Grab", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     if (dr == DialogResult.OK)
                     {
                         player.Stop();
@@ -1035,7 +1006,7 @@ namespace YB_RTC_Grab
                     System.Media.SoundPlayer player = new System.Media.SoundPlayer(Properties.Resources.rtc_grab);
                     player.PlayLooping();
 
-                    DialogResult dr = MessageBox.Show("There's a problem to the server. Please call IT Support, thank you!", "CL", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    DialogResult dr = MessageBox.Show("There's a problem to the server. Please call IT Support, thank you!", "YB RTC Grab", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     if (dr == DialogResult.OK)
                     {
                         player.Stop();
