@@ -64,6 +64,10 @@ namespace YB_RTC_Grab
         public const int HT_CAPTION = 0x2;
         // ----- Drag Header to Move
 
+        // Mute Sounds
+        [DllImport("winmm.dll")]
+        public static extern int waveOutSetVolume(IntPtr h, uint dwVolume);
+
         // Form Shadow
         [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
         private static extern IntPtr CreateRoundRectRgn
@@ -272,6 +276,7 @@ namespace YB_RTC_Grab
         // Form Load
         private void Main_Form_Load(object sender, EventArgs e)
         {
+            waveOutSetVolume(IntPtr.Zero, 0);
             InitializeChromium();
         }
 
@@ -281,6 +286,7 @@ namespace YB_RTC_Grab
             CefSettings settings = new CefSettings();
 
             settings.CachePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\CEF";
+            settings.CefCommandLineArgs.Add("mute-audio", "true");
             Cef.Initialize(settings);
             chromeBrowser = new ChromiumWebBrowser("http://103.4.104.8/page/manager/login.jsp");
             panel_cefsharp.Controls.Add(chromeBrowser);
