@@ -434,9 +434,10 @@ namespace YB_RTC_Grab
         {
             List<string> player_info = new List<string>();
             
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 5000; i++)
             {
                 JToken username = __jo.SelectToken("$.aaData[" + i + "].userId").ToString();
+                
                 if (username.ToString() != Properties.Settings.Default.______last_registered_player)
                 {
                     if (i == 0 && __index == 1)
@@ -725,6 +726,7 @@ namespace YB_RTC_Grab
         {
             if (Properties.Settings.Default.______last_registered_player == "" && Properties.Settings.Default.______last_registered_player_deposit == "")
             {
+                MessageBox.Show("detect");
                 ___GetLastRegisteredPlayer();
             }
 
