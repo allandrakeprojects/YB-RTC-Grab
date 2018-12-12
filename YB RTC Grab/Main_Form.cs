@@ -57,7 +57,7 @@ namespace YB_RTC_Grab
         private bool __isInsertDetect_deposit = false;
         private JObject __jo_deposit;
         private bool __detectInsert_deposit = false;
-        private int __send_email;
+        private int __send_email = 0;
 
         // Drag Header to Move
         [DllImport("user32.dll")]
@@ -1169,7 +1169,7 @@ namespace YB_RTC_Grab
                 __send_email++;
                 if (__send_email <= 5)
                 {
-                    SendEmail(get_message);
+                    SendEmail2(get_message);
                 }
                 else
                 {
