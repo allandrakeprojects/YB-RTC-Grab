@@ -1302,7 +1302,7 @@ namespace YB_RTC_Grab
             {
                 prs.MinWorkingSet = (IntPtr)(300000);
             }
-            catch (Exception exception)
+            catch (Exception err)
             {
                 // leave blank
             }
