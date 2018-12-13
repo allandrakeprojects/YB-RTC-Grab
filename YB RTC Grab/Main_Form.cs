@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Net;
@@ -1286,6 +1287,24 @@ namespace YB_RTC_Grab
                         ___GetLastRegisteredPlayer();
                     }
                 }
+            }
+        }
+
+        private void timer_flush_memory_Tick(object sender, EventArgs e)
+        {
+            FlushMemory();
+        }
+
+        public static void FlushMemory()
+        {
+            Process prs = Process.GetCurrentProcess();
+            try
+            {
+                prs.MinWorkingSet = (IntPtr)(300000);
+            }
+            catch (Exception exception)
+            {
+                // leave blank
             }
         }
     }
