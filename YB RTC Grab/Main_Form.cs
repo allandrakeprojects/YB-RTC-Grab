@@ -740,9 +740,6 @@ namespace YB_RTC_Grab
 
         private void ___PlayerLastRegistered()
         {
-            Properties.Settings.Default.______last_registered_player = "";
-            Properties.Settings.Default.______last_registered_player_deposit = "";
-            Properties.Settings.Default.Save();
             if (Properties.Settings.Default.______last_registered_player == "" && Properties.Settings.Default.______last_registered_player_deposit == "")
             {
                 ___GetLastRegisteredPlayer();
