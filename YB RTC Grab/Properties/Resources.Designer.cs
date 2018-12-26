@@ -102,6 +102,16 @@ namespace YB_RTC_Grab.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap rtc_loader_01 {
+            get {
+                object obj = ResourceManager.GetObject("rtc_loader_01", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap rtc_yb {
             get {
                 object obj = ResourceManager.GetObject("rtc_yb", resourceCulture);
