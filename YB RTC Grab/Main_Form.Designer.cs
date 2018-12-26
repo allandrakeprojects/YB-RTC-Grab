@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main_Form));
             this.panel_header = new System.Windows.Forms.Panel();
+            this.pictureBox_header = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label_title = new System.Windows.Forms.Label();
             this.pictureBox_minimize = new System.Windows.Forms.PictureBox();
@@ -49,14 +50,13 @@
             this.label_page_count = new System.Windows.Forms.Label();
             this.label_currentrecord = new System.Windows.Forms.Label();
             this.pictureBox_loader = new System.Windows.Forms.PictureBox();
-            this.pictureBox_header = new System.Windows.Forms.PictureBox();
             this.panel_header.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_header)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_minimize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_close)).BeginInit();
             this.panel_landing.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_landing)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_loader)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_header)).BeginInit();
             this.SuspendLayout();
             // 
             // panel_header
@@ -73,6 +73,17 @@
             this.panel_header.Size = new System.Drawing.Size(466, 45);
             this.panel_header.TabIndex = 1;
             this.panel_header.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel_header_MouseDown);
+            // 
+            // pictureBox_header
+            // 
+            this.pictureBox_header.Image = global::YB_RTC_Grab.Properties.Resources.rtc_yb;
+            this.pictureBox_header.Location = new System.Drawing.Point(120, 10);
+            this.pictureBox_header.Name = "pictureBox_header";
+            this.pictureBox_header.Size = new System.Drawing.Size(27, 24);
+            this.pictureBox_header.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox_header.TabIndex = 4;
+            this.pictureBox_header.TabStop = false;
+            this.pictureBox_header.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox_header_MouseDown);
             // 
             // panel1
             // 
@@ -250,16 +261,6 @@
             this.pictureBox_loader.Visible = false;
             this.pictureBox_loader.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox_loader_MouseDown);
             // 
-            // pictureBox_header
-            // 
-            this.pictureBox_header.Image = global::YB_RTC_Grab.Properties.Resources.rtc_yb;
-            this.pictureBox_header.Location = new System.Drawing.Point(120, 10);
-            this.pictureBox_header.Name = "pictureBox_header";
-            this.pictureBox_header.Size = new System.Drawing.Size(27, 24);
-            this.pictureBox_header.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox_header.TabIndex = 4;
-            this.pictureBox_header.TabStop = false;
-            // 
             // Main_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -287,12 +288,12 @@
             this.Load += new System.EventHandler(this.Main_Form_Load);
             this.panel_header.ResumeLayout(false);
             this.panel_header.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_header)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_minimize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_close)).EndInit();
             this.panel_landing.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_landing)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_loader)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_header)).EndInit();
             this.ResumeLayout(false);
 
         }
