@@ -489,6 +489,7 @@ namespace YB_RTC_Grab
 
                     await ___PlayerListContactNumberEmailAsync(username.ToString());
 
+                    JToken agent = __jo.SelectToken("$.aaData[" + i + "].affiliateName").ToString();
                     JToken date_time_register = __jo.SelectToken("$.aaData[" + i + "].createTime").ToString();
                     JToken name = __jo.SelectToken("$.aaData[" + i + "].userName").ToString();
                     JToken email = __jo.SelectToken("$.aaData[" + i + "].email").ToString();
@@ -500,7 +501,7 @@ namespace YB_RTC_Grab
                         DateTime date_time_register_replace = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Math.Round(Convert.ToDouble(date_time_register.ToString()) / 1000d)).ToLocalTime();
                         DateTime ldd_replace = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Math.Round(Convert.ToDouble(ldd.ToString()) / 1000d)).ToLocalTime();
 
-                        player_info.Add(username + "*|*" + name + "*|*" + date_time_register_replace.ToString("yyyy-MM-dd HH:mm:ss") + "*|*" + ldd_replace.ToString("yyyy-MM-dd HH:mm:ss") + "*|*" + cn + "*|*" + email + "*|*" + __playerlist_qq + "*|*" + __playerlist_wc);
+                        player_info.Add(username + "*|*" + name + "*|*" + date_time_register_replace.ToString("yyyy-MM-dd HH:mm:ss") + "*|*" + ldd_replace.ToString("yyyy-MM-dd HH:mm:ss") + "*|*" + cn + "*|*" + email + "*|*" + __playerlist_qq + "*|*" + __playerlist_wc + "*|*" + agent);
                     }
                     else
                     {
@@ -508,13 +509,13 @@ namespace YB_RTC_Grab
                         {
                             DateTime date_time_register_replace = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Math.Round(Convert.ToDouble(date_time_register.ToString()) / 1000d)).ToLocalTime();
 
-                            player_info.Add(username + "*|*" + name + "*|*" + date_time_register_replace.ToString("yyyy-MM-dd HH:mm:ss") + "*|*" + "" + "*|*" + cn + "*|*" + email + "*|*" + __playerlist_qq + "*|*" + __playerlist_wc);
+                            player_info.Add(username + "*|*" + name + "*|*" + date_time_register_replace.ToString("yyyy-MM-dd HH:mm:ss") + "*|*" + "" + "*|*" + cn + "*|*" + email + "*|*" + __playerlist_qq + "*|*" + __playerlist_wc + "*|*" + agent);
                         }
                         else
                         {
                             DateTime ldd_replace = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Math.Round(Convert.ToDouble(ldd.ToString()) / 1000d)).ToLocalTime();
 
-                            player_info.Add(username + "*|*" + name + "*|*" + "" + "*|*" + ldd_replace.ToString("yyyy-MM-dd HH:mm:ss") + "*|*" + cn + "*|*" + email + "*|*" + __playerlist_qq + "*|*" + __playerlist_wc);
+                            player_info.Add(username + "*|*" + name + "*|*" + "" + "*|*" + ldd_replace.ToString("yyyy-MM-dd HH:mm:ss") + "*|*" + cn + "*|*" + email + "*|*" + __playerlist_qq + "*|*" + __playerlist_wc + "*|*" + agent);
                         }
                     }
 
@@ -585,6 +586,11 @@ namespace YB_RTC_Grab
                                 else if (count == 8)
                                 {
                                     _wc = value_inner;
+                                }
+                                // Agent
+                                else if (count == 9)
+                                {
+                                    _agent = value_inner;
                                 }
                             }
 
