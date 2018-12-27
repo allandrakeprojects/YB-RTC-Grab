@@ -339,7 +339,7 @@ namespace YB_RTC_Grab
                         __mainFormHandler.Size = new Size(466, 468);
                     
                         string datetime = DateTime.Now.ToString("dd MMM HH:mm:ss");
-                        //SendITSupport("The application have been logout, please re-login again.");
+                        SendITSupport("The application have been logout, please re-login again.");
                         SendEmail("<html><body>Brand: <font color='" + __brand_color + "'>-----" + __brand_code + "-----</font><br/>IP: 192.168.10.252<br/>Location: Robinsons Summit Office<br/>Date and Time: [" + datetime + "]<br/>Line Number: " + LineNumber() + "<br/>Message: <b>The application have been logout, please re-login again.</b></body></html>");
                         __send = 0;
                     }));
