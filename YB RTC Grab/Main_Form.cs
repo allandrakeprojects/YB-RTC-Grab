@@ -312,7 +312,7 @@ namespace YB_RTC_Grab
 
             settings.CachePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\CEF";
             Cef.Initialize(settings);
-            chromeBrowser = new ChromiumWebBrowser("http://1.32.213.138/page/manager/login.jsp");
+            chromeBrowser = new ChromiumWebBrowser("http://103.4.104.8/page/manager/login.jsp");
             panel_cefsharp.Controls.Add(chromeBrowser);
             chromeBrowser.AddressChanged += ChromiumBrowserAddressChanged;
         }
@@ -326,7 +326,7 @@ namespace YB_RTC_Grab
         private void ChromiumBrowserAddressChanged(object sender, AddressChangedEventArgs e)
         {
             __url = e.Address.ToString();
-            if (e.Address.ToString().Equals("http://1.32.213.138/page/manager/login.jsp"))
+            if (e.Address.ToString().Equals("http://103.4.104.8/page/manager/login.jsp"))
             {
                 if (__isStart)
                 {
@@ -378,7 +378,7 @@ namespace YB_RTC_Grab
                 }));
             }
             
-            if (e.Address.ToString().Equals("http://1.32.213.138/page/manager/member/search.jsp") || e.Address.ToString().Equals("http://1.32.213.138/page/manager/dashboard.jsp"))
+            if (e.Address.ToString().Equals("http://103.4.104.8/page/manager/member/search.jsp") || e.Address.ToString().Equals("http://103.4.104.8/page/manager/dashboard.jsp"))
             {
                 Invoke(new Action(async () =>
                 {
@@ -429,7 +429,7 @@ namespace YB_RTC_Grab
 
         void ___CloseMessageBox()
         {
-            IntPtr windowPtr = FindWindowByCaption(IntPtr.Zero, "JavaScript Alert - http://1.32.213.138");
+            IntPtr windowPtr = FindWindowByCaption(IntPtr.Zero, "JavaScript Alert - http://103.4.104.8");
 
             if (windowPtr == IntPtr.Zero)
             {
@@ -459,7 +459,7 @@ namespace YB_RTC_Grab
                 wc.Encoding = Encoding.UTF8;
                 wc.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
 
-                byte[] result = await wc.DownloadDataTaskAsync("http://1.32.213.138/manager/member/searchMember?userId=&userName=&email=&lastDepositSince=&lastBetTimeSince=&noLoginSince=&loginIp=&vipLevel=-1&phoneNumber=&registeredDateStart=&registeredDateEnd=&birthOfDateStart=&birthOfDateEnd=&searchType=1&affiliateCode=All&pageNumber=1&pageSize=5000&sortCondition=1&sortName=sign_up_time&sortOrder=1&searchText=");
+                byte[] result = await wc.DownloadDataTaskAsync("http://103.4.104.8/manager/member/searchMember?userId=&userName=&email=&lastDepositSince=&lastBetTimeSince=&noLoginSince=&loginIp=&vipLevel=-1&phoneNumber=&registeredDateStart=&registeredDateEnd=&birthOfDateStart=&birthOfDateEnd=&searchType=1&affiliateCode=All&pageNumber=1&pageSize=5000&sortCondition=1&sortName=sign_up_time&sortOrder=1&searchText=");
                 string responsebody = Encoding.UTF8.GetString(result);
                 var deserializeObject = JsonConvert.DeserializeObject(responsebody);
                 __jo = JObject.Parse(deserializeObject.ToString());
@@ -672,7 +672,7 @@ namespace YB_RTC_Grab
                 wc.Encoding = Encoding.UTF8;
                 wc.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
 
-                byte[] result = await wc.DownloadDataTaskAsync("http://1.32.213.138/manager/member/getProfileOverview?userId=" + username);
+                byte[] result = await wc.DownloadDataTaskAsync("http://103.4.104.8/manager/member/getProfileOverview?userId=" + username);
                 string responsebody = Encoding.UTF8.GetString(result);
                 var deserializeObject = JsonConvert.DeserializeObject(responsebody);
                 JObject jo_deposit = JObject.Parse(deserializeObject.ToString());
@@ -852,7 +852,7 @@ namespace YB_RTC_Grab
                 wc.Encoding = Encoding.UTF8;
                 wc.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
 
-                byte[] result = await wc.DownloadDataTaskAsync("http://1.32.213.138/manager/member/searchMember?userId=&userName=&email=&lastDepositSince=&lastBetTimeSince=&noLoginSince=&loginIp=&vipLevel=-1&phoneNumber=&registeredDateStart=&registeredDateEnd=&birthOfDateStart=&birthOfDateEnd=&searchType=1&affiliateCode=All&pageNumber=1&pageSize=5000&sortCondition=1&sortName=sign_up_time&sortOrder=1&searchText=");
+                byte[] result = await wc.DownloadDataTaskAsync("http://103.4.104.8/manager/member/searchMember?userId=&userName=&email=&lastDepositSince=&lastBetTimeSince=&noLoginSince=&loginIp=&vipLevel=-1&phoneNumber=&registeredDateStart=&registeredDateEnd=&birthOfDateStart=&birthOfDateEnd=&searchType=1&affiliateCode=All&pageNumber=1&pageSize=5000&sortCondition=1&sortName=sign_up_time&sortOrder=1&searchText=");
                 string responsebody = Encoding.UTF8.GetString(result);
                 var deserializeObject = JsonConvert.DeserializeObject(responsebody);
                 __jo_deposit = JObject.Parse(deserializeObject.ToString());
@@ -1367,7 +1367,7 @@ namespace YB_RTC_Grab
                 wc.Encoding = Encoding.UTF8;
                 wc.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
 
-                byte[] result = await wc.DownloadDataTaskAsync("http://1.32.213.138/manager/member/searchMember?userId=&userName=&email=&lastDepositSince=&lastBetTimeSince=&noLoginSince=&loginIp=&vipLevel=-1&phoneNumber=&registeredDateStart=&registeredDateEnd=&birthOfDateStart=&birthOfDateEnd=&searchType=1&affiliateCode=All&pageNumber=1&pageSize=80000&sortCondition=1&sortName=sign_up_time&sortOrder=1&searchText=");
+                byte[] result = await wc.DownloadDataTaskAsync("http://103.4.104.8/manager/member/searchMember?userId=&userName=&email=&lastDepositSince=&lastBetTimeSince=&noLoginSince=&loginIp=&vipLevel=-1&phoneNumber=&registeredDateStart=&registeredDateEnd=&birthOfDateStart=&birthOfDateEnd=&searchType=1&affiliateCode=All&pageNumber=1&pageSize=80000&sortCondition=1&sortName=sign_up_time&sortOrder=1&searchText=");
                 string responsebody = Encoding.UTF8.GetString(result);
                 var deserializeObject = JsonConvert.DeserializeObject(responsebody);
                 __jo_mb = JObject.Parse(deserializeObject.ToString());
@@ -1563,7 +1563,7 @@ namespace YB_RTC_Grab
 
                     if (status.ToString() == "1")
                     {
-                        if (__url != "http://1.32.213.138/page/manager/login.jsp")
+                        if (__url != "http://103.4.104.8/page/manager/login.jsp")
                         {
                             // start
                             timer_mb_detect.Stop();
@@ -1634,7 +1634,7 @@ namespace YB_RTC_Grab
 
                     if (status.ToString() == "1")
                     {
-                        if (__url != "http://1.32.213.138/page/manager/login.jsp")
+                        if (__url != "http://103.4.104.8/page/manager/login.jsp")
                         {
                             // start
                             timer_mb_detect.Stop();
