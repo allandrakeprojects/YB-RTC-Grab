@@ -339,7 +339,6 @@ namespace YB_RTC_Grab
                         __mainFormHandler = Application.OpenForms[0];
                         __mainFormHandler.Size = new Size(466, 468);
                     
-                        string datetime = DateTime.Now.ToString("dd MMM HH:mm:ss");
                         SendITSupport("The application have been logout, please re-login again.");
                         SendMyBot("The application have been logout, please re-login again.");
                         __send = 0;
@@ -627,7 +626,6 @@ namespace YB_RTC_Grab
                             }
                             catch (Exception err)
                             {
-                                string datetime = DateTime.Now.ToString("dd MMM HH:mm:ss");
                                 SendMyBot(err.ToString());
                             }
 
@@ -732,7 +730,6 @@ namespace YB_RTC_Grab
                 {
                     SendITSupport("There's a problem to the server, please re-open the application.");
                     SendMyBot(err.ToString());
-                    __send = 0;
 
                     __isClose = false;
                     Environment.Exit(0);
@@ -791,7 +788,6 @@ namespace YB_RTC_Grab
                     {
                         SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
-                        __send = 0;
 
                         __isClose = false;
                         Environment.Exit(0);
@@ -1035,7 +1031,6 @@ namespace YB_RTC_Grab
                     {
                         SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
-                        __send = 0;
 
                         __isClose = false;
                         Environment.Exit(0);
@@ -1082,7 +1077,6 @@ namespace YB_RTC_Grab
                     {
                         SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
-                        __send = 0;
 
                         __isClose = false;
                         Environment.Exit(0);
@@ -1272,7 +1266,6 @@ namespace YB_RTC_Grab
                     {
                         SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
-                        __send = 0;
 
                         __isClose = false;
                         Environment.Exit(0);
@@ -1325,7 +1318,6 @@ namespace YB_RTC_Grab
                     {
                         SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
-                        __send = 0;
 
                         __isClose = false;
                         Environment.Exit(0);
@@ -1539,7 +1531,6 @@ namespace YB_RTC_Grab
                 {
                     SendITSupport("There's a problem to the server, please re-open the application.");
                     SendMyBot(err.ToString());
-                    __send = 0;
 
                     __isClose = false;
                     Environment.Exit(0);
@@ -1614,7 +1605,6 @@ namespace YB_RTC_Grab
                     {
                         SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
-                        __send = 0;
 
                         __isClose = false;
                         Environment.Exit(0);
@@ -1685,7 +1675,6 @@ namespace YB_RTC_Grab
                     {
                         SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
-                        __send = 0;
 
                         __isClose = false;
                         Environment.Exit(0);
@@ -1737,7 +1726,6 @@ namespace YB_RTC_Grab
                     {
                         SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
-                        __send = 0;
 
                         __isClose = false;
                         Environment.Exit(0);
@@ -1788,7 +1776,6 @@ namespace YB_RTC_Grab
                     {
                         SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
-                        __send = 0;
 
                         __isClose = false;
                         Environment.Exit(0);
@@ -1835,7 +1822,6 @@ namespace YB_RTC_Grab
                     {
                         SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
-                        __send = 0;
 
                         __isClose = false;
                         Environment.Exit(0);
@@ -1882,7 +1868,6 @@ namespace YB_RTC_Grab
                     {
                         SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
-                        __send = 0;
 
                         __isClose = false;
                         Environment.Exit(0);
@@ -1933,7 +1918,6 @@ namespace YB_RTC_Grab
             }
             catch (Exception err)
             {
-                string datetime = DateTime.Now.ToString("dd MMM HH:mm:ss");
                 SendMyBot(err.ToString());
             }
         }
@@ -1992,7 +1976,6 @@ namespace YB_RTC_Grab
                     {
                         SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
-                        __send = 0;
 
                         __isClose = false;
                         Environment.Exit(0);
@@ -2041,7 +2024,6 @@ namespace YB_RTC_Grab
                     {
                         SendITSupport("There's a problem to the server, please re-open the application.");
                         SendMyBot(err.ToString());
-                        __send = 0;
 
                         __isClose = false;
                         Environment.Exit(0);
