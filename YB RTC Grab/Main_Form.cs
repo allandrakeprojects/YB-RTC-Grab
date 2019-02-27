@@ -951,6 +951,26 @@ namespace YB_RTC_Grab
                 }
                 else
                 {
+                    if (__detectInsert_deposit)
+                    {
+                        JToken ldd = __jo_deposit.SelectToken("$.aaData[" + i + "].lastDepositTime").ToString();
+                        if (!String.IsNullOrEmpty(ldd.ToString()))
+                        {
+                            DateTime ldd_replace = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Math.Round(Convert.ToDouble(ldd.ToString()) / 1000d)).ToLocalTime();
+
+                            if (!isInsert)
+                            {
+                                player_info.Add(username + "*|*" + ldd_replace.ToString("yyyy-MM-dd HH:mm:ss"));
+
+                                using (StreamWriter file = new StreamWriter(Path.GetTempPath() + path, true, Encoding.UTF8))
+                                {
+                                    file.WriteLine(username);
+                                    file.Close();
+                                }
+                            }
+                        }
+                    }
+
                     if (player_info.Count != 0)
                     {
                         player_info.Reverse();
