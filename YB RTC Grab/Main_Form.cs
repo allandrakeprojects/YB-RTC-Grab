@@ -1196,7 +1196,7 @@ namespace YB_RTC_Grab
                         Directory.Delete(parent_dir, true);
                     }
 
-                    SendMyBot(err.ToString() + " ----- hexademical");
+                    SendMyBot(err.ToString() + " ----- hexadecimal");
                     SendITSupport("There's a problem to the server, please re-open the application.");
 
                     __isClose = false;
@@ -1261,7 +1261,7 @@ namespace YB_RTC_Grab
                             Directory.Delete(parent_dir, true);
                         }
 
-                        SendMyBot(err.ToString() + " ----- hexademical");
+                        SendMyBot(err.ToString() + " ----- hexadecimal");
                         SendITSupport("There's a problem to the server, please re-open the application.");
 
                         __isClose = false;
