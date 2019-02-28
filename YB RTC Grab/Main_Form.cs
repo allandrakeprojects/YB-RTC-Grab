@@ -825,7 +825,7 @@ namespace YB_RTC_Grab
                 __send++;
                 if (__send == 5)
                 {
-                    SendMyBot(err.ToString());
+                    SendMyBot(err.ToString() + " ----- hexadecimal");
                     SendITSupport("There's a problem to the server, please re-open the application.");
 
                     __isClose = false;
